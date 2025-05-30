@@ -25,19 +25,51 @@ class DropBoxController {
 
         this.inputFilesEl.addEventListener('change', event => {
 
-            this.uploadTask(event.target.files);
+            this.btnSendFileEl.disabled = true;
+
+            this.uploadTask(event.target.files).then(responses => {
+
+                responses.forEach(resp => {
+
+                    this.getFirebaseRef().push().set((resp.files['input-file']));
+
+                })
+
+                this.uploadComplete();
+
+            }).catch(err=>{
+
+                this.uploadComplete();
+                console.error(err);
+            })
 
             this.modalShow();
 
-            this.inputFilesEl.value = '';
 
         })
 
     }
 
-    modalShow(show = true){
-        this.snackModalEl.style.display = (show) ? 'block' : 'none';
+    uploadComplete(){
+
+        this.modalShow(false);
+        this.inputFilesEl.value = '';
+        this.btnSendFileEl.disabled = true;
     }
+
+    getFirebaseRef(){ 
+
+        return firebase.database().ref('files');
+
+    }
+
+    modalShow(show = true) {
+
+        this.snackModalEl.style.display = (show) ? 'block' : 'none';
+
+    }
+
+
 
     uploadTask(files) {
 
@@ -52,8 +84,6 @@ class DropBoxController {
                 ajax.open('POST', '/upload');
 
                 ajax.onload = event => {
-
-                    this.modalShow(false);
 
                     try {
 
@@ -105,13 +135,13 @@ class DropBoxController {
         this.progressBarEl.style.width = `${porcent}%`;
 
         this.namefileEl.innerHTML = file.name;
-        this.timeleftEl.innerHTML = this.formatTimeToHuman(timeleft); 
+        this.timeleftEl.innerHTML = this.formatTimeToHuman(timeleft);
 
         console.log(timespent, timeleft, porcent);
 
     }
 
-    formatTimeToHuman(duration){
+    formatTimeToHuman(duration) {
 
         let seconds = parseInt((duration / 1000) % 60);
         let minutes = parseInt((duration / (1000 * 60)) % 60);
@@ -121,11 +151,11 @@ class DropBoxController {
             return `${hours} horas, ${minutes}, minutos e ${seconds} segundos`
         }
 
-         if (minutes > 0) {
+        if (minutes > 0) {
             return `${minutes}, minutos e ${seconds} segundos`
         }
 
-         if (seconds > 0) {
+        if (seconds > 0) {
             return `${seconds} segundos`
         }
 
@@ -133,8 +163,8 @@ class DropBoxController {
 
     }
 
-    getFileIconView(file){
-        switch(file.type){
+    getFileIconView(file) {
+        switch (file.type) {
 
             // FOLDER
             case 'folder':
@@ -147,7 +177,7 @@ class DropBoxController {
                                         </g>
                                     </svg>
                         `;
-            break;
+                break;
 
             //APPLICATION
             case 'application/pdf':
@@ -184,7 +214,7 @@ class DropBoxController {
                                                 c-0.131-1.296,1.072-0.867,1.753-0.876c0.796-0.011,1.668,0.118,1.588,1.293C97.394,93.857,97.226,94.871,96.229,94.8z"></path>
                                     </svg>
                                     `;
-            break
+                break
 
             // AUDIO
             case 'audio/mp3':
@@ -207,7 +237,7 @@ class DropBoxController {
                                         </g>
                                     </svg>
                                     `;
-            break
+                break
 
 
             // VIDEO 
@@ -277,7 +307,7 @@ class DropBoxController {
                                         </g>
                                     </svg>
                                     `;
-            break
+                break
 
             default:
                 return `<svg width="160" height="160" viewBox="0 0 160 160" class="mc-icon-template-content tile__preview tile__preview--icon">
@@ -300,7 +330,7 @@ class DropBoxController {
         }
     }
 
-    getFileView(){
+    getFileView() {
         return `
             <li>
                 ${this.getFileIconView(file)}                      
