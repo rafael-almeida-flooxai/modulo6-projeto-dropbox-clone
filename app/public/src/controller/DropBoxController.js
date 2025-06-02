@@ -1,5 +1,6 @@
 class DropBoxController {
 
+
     constructor() {
 
         this.btnSendFileEl = document.querySelector('#btn-send-file');
@@ -14,6 +15,8 @@ class DropBoxController {
 
     }
 
+
+
     connectFirebase() {
         var firebaseConfig = {
             apiKey: "AIzaSyBU_A5drWnMWVH6U0km-YeWci1qAIYvviU",
@@ -22,8 +25,11 @@ class DropBoxController {
             storageBucket: "dropbox-clone-e6807.firebasestorage.app",
             messagingSenderId: "426465098868",
             appId: "1:426465098868:web:d694c0ae6b7264be21a521"
-        }
+        };
 
+        databaseURL: "https://dropbox-clone-e6807-default-rtdb.firebaseio.com/";
+
+        // Inicializa o Firebase
         firebase.initializeApp(firebaseConfig);
     }
 
