@@ -14,6 +14,18 @@ class DropBoxController {
 
     }
 
+    connectFirebase() {
+        var firebaseConfig = {
+            apiKey: "AIzaSyBU_A5drWnMWVH6U0km-YeWci1qAIYvviU",
+            authDomain: "dropbox-clone-e6807.firebaseapp.com",
+            projectId: "dropbox-clone-e6807",
+            storageBucket: "dropbox-clone-e6807.firebasestorage.app",
+            messagingSenderId: "426465098868",
+            appId: "1:426465098868:web:d694c0ae6b7264be21a521"
+        }
+
+        firebase.initializeApp(firebaseConfig);
+    }
 
     initEvents() {
 
@@ -31,13 +43,13 @@ class DropBoxController {
 
                 responses.forEach(resp => {
 
-                    this.getFirebaseRef().push().set((resp.files['input-file']));
+                    this.getFirebaseRef().push().set(resp.files['input-file']);
 
                 })
 
                 this.uploadComplete();
 
-            }).catch(err=>{
+            }).catch(err => {
 
                 this.uploadComplete();
                 console.error(err);
@@ -50,14 +62,14 @@ class DropBoxController {
 
     }
 
-    uploadComplete(){
+    uploadComplete() {
 
         this.modalShow(false);
         this.inputFilesEl.value = '';
         this.btnSendFileEl.disabled = true;
     }
 
-    getFirebaseRef(){ 
+    getFirebaseRef() {
 
         return firebase.database().ref('files');
 
