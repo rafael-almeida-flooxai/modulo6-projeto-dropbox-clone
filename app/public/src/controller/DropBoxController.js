@@ -365,6 +365,15 @@ class DropBoxController {
 
     initEventsLi(li){
         li.addEventListener('click', e=>{
+
+            if(!e.ctrlKey) {
+
+                this.listFilesEl.querySelectorAll('li.selected').forEach(el=>{
+                    el.classList.remove('selected');
+                })
+
+            }
+
             li.classList.toggle('class');
         })
     }
